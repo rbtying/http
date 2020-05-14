@@ -1,3 +1,6 @@
+use std::prelude::v1::*;
+
+#[cfg(feature = "std")]
 use std::error;
 use std::fmt;
 use std::result;
@@ -31,26 +34,43 @@ enum ErrorKind {
 
 impl fmt::Debug for Error {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        f.debug_tuple("http::Error")
-            // Skip the noise of the ErrorKind enum
-            .field(&self.get_ref())
-            .finish()
+        use self::ErrorKind::*;
+        // Skip the noise of the ErrorKind enum
+        let mut tup = f.debug_tuple("http::Error");
+        match self.inner {
+            StatusCode(ref e) => tup.field(e).finish(),
+            Method(ref e) => tup.field(e).finish(),
+            Uri(ref e) => tup.field(e).finish(),
+            UriParts(ref e) => tup.field(e).finish(),
+            HeaderName(ref e) => tup.field(e).finish(),
+            HeaderValue(ref e) => tup.field(e).finish(),
+        }
     }
 }
 
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        fmt::Display::fmt(self.get_ref(), f)
+        use self::ErrorKind::*;
+        match self.inner {
+            StatusCode(ref e) => fmt::Display::fmt(e, f),
+            Method(ref e) => fmt::Display::fmt(e, f),
+            Uri(ref e) => fmt::Display::fmt(e, f),
+            UriParts(ref e) => fmt::Display::fmt(e, f),
+            HeaderName(ref e) => fmt::Display::fmt(e, f),
+            HeaderValue(ref e) => fmt::Display::fmt(e, f),
+        }
     }
 }
 
 impl Error {
     /// Return true if the underlying error has the same type as T.
+    #[cfg(feature = "std")]
     pub fn is<T: error::Error + 'static>(&self) -> bool {
         self.get_ref().is::<T>()
     }
 
     /// Return a reference to the lower level, inner error.
+    #[cfg(feature = "std")]
     pub fn get_ref(&self) -> &(dyn error::Error + 'static) {
         use self::ErrorKind::*;
 
@@ -65,6 +85,7 @@ impl Error {
     }
 }
 
+#[cfg(feature = "std")]
 impl error::Error for Error {
     // Return any available cause from the inner error. Note the inner error is
     // not itself the cause.
@@ -127,6 +148,7 @@ impl From<std::convert::Infallible> for Error {
     }
 }
 
+#[cfg(feature = "std")]
 #[cfg(test)]
 mod tests {
     use super::*;

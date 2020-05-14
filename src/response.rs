@@ -61,6 +61,7 @@
 //! // ...
 //! ```
 
+#[cfg(feature = "std")]
 use std::any::Any;
 use std::convert::TryFrom;
 use std::fmt;
@@ -688,6 +689,7 @@ impl Builder {
     /// assert_eq!(response.extensions().get::<&'static str>(),
     ///            Some(&"My Extension"));
     /// ```
+    #[cfg(feature = "std")]
     pub fn extension<T>(self, extension: T) -> Builder
     where
         T: Any + Send + Sync + 'static,
@@ -754,19 +756,14 @@ impl Builder {
     ///     .unwrap();
     /// ```
     pub fn body<T>(self, body: T) -> Result<Response<T>> {
-        self.inner.map(move |head| {
-            Response {
-                head,
-                body,
-            }
-        })
+        self.inner.map(move |head| Response { head, body })
     }
 
     // private
 
     fn and_then<F>(self, func: F) -> Self
     where
-        F: FnOnce(Parts) -> Result<Parts>
+        F: FnOnce(Parts) -> Result<Parts>,
     {
         Builder {
             inner: self.inner.and_then(func),

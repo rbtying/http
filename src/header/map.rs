@@ -1,15 +1,23 @@
-use std::collections::HashMap;
+use std::prelude::v1::*;
+
+#[cfg(feature = "std")]
 use std::collections::hash_map::RandomState;
+#[cfg(feature = "std")]
+use std::collections::HashMap;
+#[cfg(feature = "std")]
 use std::convert::TryFrom;
-use std::hash::{BuildHasher, Hash, Hasher};
+#[cfg(feature = "std")]
+use std::hash::BuildHasher;
+use std::hash::{Hash, Hasher};
 use std::iter::{FromIterator, FusedIterator};
 use std::marker::PhantomData;
 use std::{fmt, mem, ops, ptr, vec};
 
+#[cfg(feature = "std")]
 use crate::Error;
 
-use super::HeaderValue;
 use super::name::{HdrName, HeaderName, InvalidHeaderName};
+use super::HeaderValue;
 
 pub use self::as_header_name::AsHeaderName;
 pub use self::into_header_name::IntoHeaderName;
@@ -311,6 +319,7 @@ enum Link {
 enum Danger {
     Green,
     Yellow,
+    #[cfg(feature = "std")]
     Red(RandomState),
 }
 
@@ -963,7 +972,9 @@ impl<T> HeaderMap<T> {
         let entries = &mut self.entries[..] as *mut _;
         let extra_values = &mut self.extra_values as *mut _;
         let len = self.entries.len();
-        unsafe { self.entries.set_len(0); }
+        unsafe {
+            self.entries.set_len(0);
+        }
 
         Drain {
             idx: 0,
@@ -1518,6 +1529,7 @@ impl<T> HeaderMap<T> {
                 // Grow the capacity
                 self.grow(new_cap);
             } else {
+                #[cfg(feature = "std")]
                 self.danger.to_red();
 
                 // Rebuild hash table
@@ -1587,7 +1599,11 @@ impl<T> HeaderMap<T> {
 
 /// Removes the `ExtraValue` at the given index.
 #[inline]
-fn remove_extra_value<T>(mut raw_links: RawLinks<T>, extra_values: &mut Vec<ExtraValue<T>>, idx: usize) -> ExtraValue<T> {
+fn remove_extra_value<T>(
+    mut raw_links: RawLinks<T>,
+    extra_values: &mut Vec<ExtraValue<T>>,
+    idx: usize,
+) -> ExtraValue<T> {
     let prev;
     let next;
 
@@ -1608,8 +1624,7 @@ fn remove_extra_value<T>(mut raw_links: RawLinks<T>, extra_values: &mut Vec<Extr
         (Link::Entry(prev), Link::Extra(next)) => {
             debug_assert!(raw_links[prev].is_some());
 
-            raw_links[prev].as_mut().unwrap()
-                .next = next;
+            raw_links[prev].as_mut().unwrap().next = next;
 
             debug_assert!(extra_values.len() > next);
             extra_values[next].prev = Link::Entry(prev);
@@ -1617,8 +1632,7 @@ fn remove_extra_value<T>(mut raw_links: RawLinks<T>, extra_values: &mut Vec<Extr
         (Link::Extra(prev), Link::Entry(next)) => {
             debug_assert!(raw_links[next].is_some());
 
-            raw_links[next].as_mut().unwrap()
-                .tail = prev;
+            raw_links[next].as_mut().unwrap().tail = prev;
 
             debug_assert!(extra_values.len() > prev);
             extra_values[prev].next = Link::Entry(next);
@@ -1809,13 +1823,14 @@ impl<T> FromIterator<(HeaderName, T)> for HeaderMap<T> {
 /// let headers: HeaderMap = (&map).try_into().expect("valid headers");
 /// assert_eq!(headers["X-Custom-Header"], "my value");
 /// ```
+#[cfg(feature = "std")]
 impl<'a, K, V, T> TryFrom<&'a HashMap<K, V>> for HeaderMap<T>
-    where
-        K: Eq + Hash,
-        HeaderName: TryFrom<&'a K>,
-        <HeaderName as TryFrom<&'a K>>::Error: Into<crate::Error>,
-        T: TryFrom<&'a V>,
-        T::Error: Into<crate::Error>,
+where
+    K: Eq + Hash,
+    HeaderName: TryFrom<&'a K>,
+    <HeaderName as TryFrom<&'a K>>::Error: Into<crate::Error>,
+    T: TryFrom<&'a V>,
+    T::Error: Into<crate::Error>,
 {
     type Error = Error;
 
@@ -2174,9 +2189,7 @@ impl<'a, T> Iterator for Drain<'a, T> {
             // Remove the extra value
 
             let raw_links = RawLinks(self.entries);
-            let extra = unsafe {
-                remove_extra_value(raw_links, &mut *self.extra_values, next)
-            };
+            let extra = unsafe { remove_extra_value(raw_links, &mut *self.extra_values, next) };
 
             match extra.next {
                 Link::Extra(idx) => self.next = Some(idx),
@@ -3038,9 +3051,8 @@ impl<'a, T> Iterator for ValueDrain<'a, T> {
             self.first.take()
         } else if let Some(next) = self.next {
             // Remove the extra value
-            let extra = unsafe {
-                remove_extra_value(self.raw_links, &mut *self.extra_values, next)
-            };
+            let extra =
+                unsafe { remove_extra_value(self.raw_links, &mut *self.extra_values, next) };
 
             match extra.next {
                 Link::Extra(idx) => self.next = Some(idx),
@@ -3090,17 +3102,13 @@ impl<T> ops::Index<usize> for RawLinks<T> {
     type Output = Option<Links>;
 
     fn index(&self, idx: usize) -> &Self::Output {
-        unsafe {
-            &(*self.0)[idx].links
-        }
+        unsafe { &(*self.0)[idx].links }
     }
 }
 
 impl<T> ops::IndexMut<usize> for RawLinks<T> {
     fn index_mut(&mut self, idx: usize) -> &mut Self::Output {
-        unsafe {
-            &mut (*self.0)[idx].links
-        }
+        unsafe { &mut (*self.0)[idx].links }
     }
 }
 
@@ -3147,11 +3155,13 @@ impl Pos {
 impl Danger {
     fn is_red(&self) -> bool {
         match *self {
+            #[cfg(feature = "std")]
             Danger::Red(_) => true,
             _ => false,
         }
     }
 
+    #[cfg(feature = "std")]
     fn to_red(&mut self) {
         debug_assert!(self.is_yellow());
         *self = Danger::Red(RandomState::new());
@@ -3212,6 +3222,7 @@ where
 
     let hash = match *danger {
         // Safe hash
+        #[cfg(feature = "std")]
         Danger::Red(ref hasher) => {
             let mut h = hasher.build_hasher();
             k.hash(&mut h);
@@ -3328,6 +3339,8 @@ mod into_header_name {
 }
 
 mod as_header_name {
+    use std::prelude::v1::*;
+
     use super::{Entry, HdrName, HeaderMap, HeaderName, InvalidHeaderName};
 
     /// A marker trait used to identify values that can be used as search keys

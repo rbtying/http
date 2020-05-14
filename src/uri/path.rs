@@ -1,3 +1,5 @@
+use std::prelude::v1::*;
+
 use std::convert::TryFrom;
 use std::str::FromStr;
 use std::{cmp, fmt, str};
@@ -43,13 +45,7 @@ impl PathAndQuery {
                     // This is the range of bytes that don't need to be
                     // percent-encoded in the path. If it should have been
                     // percent-encoded, then error.
-                    0x21 |
-                    0x24..=0x3B |
-                    0x3D |
-                    0x40..=0x5F |
-                    0x61..=0x7A |
-                    0x7C |
-                    0x7E => {},
+                    0x21 | 0x24..=0x3B | 0x3D | 0x40..=0x5F | 0x61..=0x7A | 0x7C | 0x7E => {}
 
                     _ => return Err(ErrorKind::InvalidUriChar.into()),
                 }
@@ -64,10 +60,7 @@ impl PathAndQuery {
                         // See https://url.spec.whatwg.org/#query-state
                         //
                         // Allowed: 0x21 / 0x24 - 0x3B / 0x3D / 0x3F - 0x7E
-                        0x21 |
-                        0x24..=0x3B |
-                        0x3D |
-                        0x3F..=0x7E => {},
+                        0x21 | 0x24..=0x3B | 0x3D | 0x3F..=0x7E => {}
 
                         b'#' => {
                             fragment = Some(i);

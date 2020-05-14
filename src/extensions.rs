@@ -1,8 +1,16 @@
+use std::prelude::v1::*;
+
+#[cfg(feature = "std")]
 use std::any::{Any, TypeId};
+
+#[cfg(feature = "std")]
 use std::collections::HashMap;
 use std::fmt;
-use std::hash::{BuildHasherDefault, Hasher};
+#[cfg(feature = "std")]
+use std::hash::BuildHasherDefault;
+use std::hash::Hasher;
 
+#[cfg(feature = "std")]
 type AnyMap = HashMap<TypeId, Box<dyn Any + Send + Sync>, BuildHasherDefault<IdHasher>>;
 
 // With TypeIds as keys, there's no need to hash them. They are already hashes
@@ -35,14 +43,23 @@ impl Hasher for IdHasher {
 pub struct Extensions {
     // If extensions are never used, no need to carry around an empty HashMap.
     // That's 3 words. Instead, this is only 1 word.
+    #[cfg(feature = "std")]
     map: Option<Box<AnyMap>>,
 }
 
 impl Extensions {
     /// Create an empty `Extensions`.
+    #[cfg(feature = "std")]
     #[inline]
     pub fn new() -> Extensions {
         Extensions { map: None }
+    }
+
+    /// Create an empty `Extensions`.
+    #[cfg(not(feature = "std"))]
+    #[inline]
+    pub fn new() -> Extensions {
+        Extensions {}
     }
 
     /// Insert a type into this `Extensions`.
@@ -59,6 +76,7 @@ impl Extensions {
     /// assert!(ext.insert(4u8).is_none());
     /// assert_eq!(ext.insert(9i32), Some(5i32));
     /// ```
+    #[cfg(feature = "std")]
     pub fn insert<T: Send + Sync + 'static>(&mut self, val: T) -> Option<T> {
         self.map
             .get_or_insert_with(|| Box::new(HashMap::default()))
@@ -83,6 +101,7 @@ impl Extensions {
     ///
     /// assert_eq!(ext.get::<i32>(), Some(&5i32));
     /// ```
+    #[cfg(feature = "std")]
     pub fn get<T: Send + Sync + 'static>(&self) -> Option<&T> {
         self.map
             .as_ref()
@@ -102,6 +121,7 @@ impl Extensions {
     ///
     /// assert_eq!(ext.get::<String>().unwrap(), "Hello World");
     /// ```
+    #[cfg(feature = "std")]
     pub fn get_mut<T: Send + Sync + 'static>(&mut self) -> Option<&mut T> {
         self.map
             .as_mut()
@@ -122,6 +142,7 @@ impl Extensions {
     /// assert_eq!(ext.remove::<i32>(), Some(5i32));
     /// assert!(ext.get::<i32>().is_none());
     /// ```
+    #[cfg(feature = "std")]
     pub fn remove<T: Send + Sync + 'static>(&mut self) -> Option<T> {
         self.map
             .as_mut()
@@ -146,6 +167,7 @@ impl Extensions {
     ///
     /// assert!(ext.get::<i32>().is_none());
     /// ```
+    #[cfg(feature = "std")]
     #[inline]
     pub fn clear(&mut self) {
         if let Some(ref mut map) = self.map {
@@ -160,6 +182,7 @@ impl fmt::Debug for Extensions {
     }
 }
 
+#[cfg(feature = "std")]
 #[test]
 fn test_extensions() {
     #[derive(Debug, PartialEq)]

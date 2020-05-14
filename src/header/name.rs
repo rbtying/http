@@ -1,9 +1,12 @@
+use std::prelude::v1::*;
+
 use crate::byte_str::ByteStr;
 use bytes::{Bytes, BytesMut};
 
 use std::borrow::Borrow;
+use std::convert::TryFrom;
+#[cfg(feature = "std")]
 use std::error::Error;
-use std::convert::{TryFrom};
 use std::hash::{Hash, Hasher};
 use std::str::FromStr;
 use std::{fmt, mem};
@@ -980,63 +983,63 @@ standard_headers! {
 /// ```
 const HEADER_CHARS: [u8; 256] = [
     //  0      1      2      3      4      5      6      7      8      9
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, //   x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, //  1x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, //  2x
-        0,     0,     0,  b'!',  b'"',  b'#',  b'$',  b'%',  b'&', b'\'', //  3x
-        0,     0,  b'*',  b'+',     0,  b'-',  b'.',     0,  b'0',  b'1', //  4x
-     b'2',  b'3',  b'4',  b'5',  b'6',  b'7',  b'8',  b'9',     0,     0, //  5x
-        0,     0,     0,     0,     0,  b'a',  b'b',  b'c',  b'd',  b'e', //  6x
-     b'f',  b'g',  b'h',  b'i',  b'j',  b'k',  b'l',  b'm',  b'n',  b'o', //  7x
-     b'p',  b'q',  b'r',  b's',  b't',  b'u',  b'v',  b'w',  b'x',  b'y', //  8x
-     b'z',     0,     0,     0,  b'^',  b'_',  b'`',  b'a',  b'b',  b'c', //  9x
-     b'd',  b'e',  b'f',  b'g',  b'h',  b'i',  b'j',  b'k',  b'l',  b'm', // 10x
-     b'n',  b'o',  b'p',  b'q',  b'r',  b's',  b't',  b'u',  b'v',  b'w', // 11x
-     b'x',  b'y',  b'z',     0,  b'|',     0,  b'~',     0,     0,     0, // 12x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, // 13x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, // 14x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, // 15x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, // 16x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, // 17x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, // 18x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, // 19x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, // 20x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, // 21x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, // 22x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, // 23x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, // 24x
-        0,     0,     0,     0,     0,     0                              // 25x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //   x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //  1x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //  2x
+    0, 0, 0, b'!', b'"', b'#', b'$', b'%', b'&', b'\'', //  3x
+    0, 0, b'*', b'+', 0, b'-', b'.', 0, b'0', b'1', //  4x
+    b'2', b'3', b'4', b'5', b'6', b'7', b'8', b'9', 0, 0, //  5x
+    0, 0, 0, 0, 0, b'a', b'b', b'c', b'd', b'e', //  6x
+    b'f', b'g', b'h', b'i', b'j', b'k', b'l', b'm', b'n', b'o', //  7x
+    b'p', b'q', b'r', b's', b't', b'u', b'v', b'w', b'x', b'y', //  8x
+    b'z', 0, 0, 0, b'^', b'_', b'`', b'a', b'b', b'c', //  9x
+    b'd', b'e', b'f', b'g', b'h', b'i', b'j', b'k', b'l', b'm', // 10x
+    b'n', b'o', b'p', b'q', b'r', b's', b't', b'u', b'v', b'w', // 11x
+    b'x', b'y', b'z', 0, b'|', 0, b'~', 0, 0, 0, // 12x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 13x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 14x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 15x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 16x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 17x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 18x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 19x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 20x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 21x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 22x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 23x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 24x
+    0, 0, 0, 0, 0, 0, // 25x
 ];
 
 /// Valid header name characters for HTTP/2.0 and HTTP/3.0
 const HEADER_CHARS_H2: [u8; 256] = [
     //  0      1      2      3      4      5      6      7      8      9
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, //   x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, //  1x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, //  2x
-        0,     0,     0,  b'!',  b'"',  b'#',  b'$',  b'%',  b'&', b'\'', //  3x
-        0,     0,  b'*',  b'+',     0,  b'-',  b'.',     0,  b'0',  b'1', //  4x
-     b'2',  b'3',  b'4',  b'5',  b'6',  b'7',  b'8',  b'9',     0,     0, //  5x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, //  6x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, //  7x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, //  8x
-        0,     0,     0,     0,  b'^',  b'_',  b'`',  b'a',  b'b',  b'c', //  9x
-     b'd',  b'e',  b'f',  b'g',  b'h',  b'i',  b'j',  b'k',  b'l',  b'm', // 10x
-     b'n',  b'o',  b'p',  b'q',  b'r',  b's',  b't',  b'u',  b'v',  b'w', // 11x
-     b'x',  b'y',  b'z',     0,  b'|',     0,  b'~',     0,     0,     0, // 12x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, // 13x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, // 14x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, // 15x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, // 16x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, // 17x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, // 18x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, // 19x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, // 20x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, // 21x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, // 22x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, // 23x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, // 24x
-        0,     0,     0,     0,     0,     0                              // 25x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //   x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //  1x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //  2x
+    0, 0, 0, b'!', b'"', b'#', b'$', b'%', b'&', b'\'', //  3x
+    0, 0, b'*', b'+', 0, b'-', b'.', 0, b'0', b'1', //  4x
+    b'2', b'3', b'4', b'5', b'6', b'7', b'8', b'9', 0, 0, //  5x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //  6x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //  7x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //  8x
+    0, 0, 0, 0, b'^', b'_', b'`', b'a', b'b', b'c', //  9x
+    b'd', b'e', b'f', b'g', b'h', b'i', b'j', b'k', b'l', b'm', // 10x
+    b'n', b'o', b'p', b'q', b'r', b's', b't', b'u', b'v', b'w', // 11x
+    b'x', b'y', b'z', 0, b'|', 0, b'~', 0, 0, 0, // 12x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 13x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 14x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 15x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 16x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 17x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 18x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 19x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 20x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 21x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 22x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 23x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 24x
+    0, 0, 0, 0, 0, 0, // 25x
 ];
 
 #[cfg(any(not(debug_assertions), not(target_arch = "wasm32")))]
@@ -1077,48 +1080,153 @@ fn parse_hdr<'a>(
         }
     };
 
-
     macro_rules! to_lower {
-        ($d:ident, $src:ident, 1) => { $d[0] = table[$src[0] as usize]; };
-        ($d:ident, $src:ident, 2) => { to_lower!($d, $src, 1); $d[1] = table[$src[1] as usize]; };
-        ($d:ident, $src:ident, 3) => { to_lower!($d, $src, 2); $d[2] = table[$src[2] as usize]; };
-        ($d:ident, $src:ident, 4) => { to_lower!($d, $src, 3); $d[3] = table[$src[3] as usize]; };
-        ($d:ident, $src:ident, 5) => { to_lower!($d, $src, 4); $d[4] = table[$src[4] as usize]; };
-        ($d:ident, $src:ident, 6) => { to_lower!($d, $src, 5); $d[5] = table[$src[5] as usize]; };
-        ($d:ident, $src:ident, 7) => { to_lower!($d, $src, 6); $d[6] = table[$src[6] as usize]; };
-        ($d:ident, $src:ident, 8) => { to_lower!($d, $src, 7); $d[7] = table[$src[7] as usize]; };
-        ($d:ident, $src:ident, 9) => { to_lower!($d, $src, 8); $d[8] = table[$src[8] as usize]; };
-        ($d:ident, $src:ident, 10) => { to_lower!($d, $src, 9); $d[9] = table[$src[9] as usize]; };
-        ($d:ident, $src:ident, 11) => { to_lower!($d, $src, 10); $d[10] = table[$src[10] as usize]; };
-        ($d:ident, $src:ident, 12) => { to_lower!($d, $src, 11); $d[11] = table[$src[11] as usize]; };
-        ($d:ident, $src:ident, 13) => { to_lower!($d, $src, 12); $d[12] = table[$src[12] as usize]; };
-        ($d:ident, $src:ident, 14) => { to_lower!($d, $src, 13); $d[13] = table[$src[13] as usize]; };
-        ($d:ident, $src:ident, 15) => { to_lower!($d, $src, 14); $d[14] = table[$src[14] as usize]; };
-        ($d:ident, $src:ident, 16) => { to_lower!($d, $src, 15); $d[15] = table[$src[15] as usize]; };
-        ($d:ident, $src:ident, 17) => { to_lower!($d, $src, 16); $d[16] = table[$src[16] as usize]; };
-        ($d:ident, $src:ident, 18) => { to_lower!($d, $src, 17); $d[17] = table[$src[17] as usize]; };
-        ($d:ident, $src:ident, 19) => { to_lower!($d, $src, 18); $d[18] = table[$src[18] as usize]; };
-        ($d:ident, $src:ident, 20) => { to_lower!($d, $src, 19); $d[19] = table[$src[19] as usize]; };
-        ($d:ident, $src:ident, 21) => { to_lower!($d, $src, 20); $d[20] = table[$src[20] as usize]; };
-        ($d:ident, $src:ident, 22) => { to_lower!($d, $src, 21); $d[21] = table[$src[21] as usize]; };
-        ($d:ident, $src:ident, 23) => { to_lower!($d, $src, 22); $d[22] = table[$src[22] as usize]; };
-        ($d:ident, $src:ident, 24) => { to_lower!($d, $src, 23); $d[23] = table[$src[23] as usize]; };
-        ($d:ident, $src:ident, 25) => { to_lower!($d, $src, 24); $d[24] = table[$src[24] as usize]; };
-        ($d:ident, $src:ident, 26) => { to_lower!($d, $src, 25); $d[25] = table[$src[25] as usize]; };
-        ($d:ident, $src:ident, 27) => { to_lower!($d, $src, 26); $d[26] = table[$src[26] as usize]; };
-        ($d:ident, $src:ident, 28) => { to_lower!($d, $src, 27); $d[27] = table[$src[27] as usize]; };
-        ($d:ident, $src:ident, 29) => { to_lower!($d, $src, 28); $d[28] = table[$src[28] as usize]; };
-        ($d:ident, $src:ident, 30) => { to_lower!($d, $src, 29); $d[29] = table[$src[29] as usize]; };
-        ($d:ident, $src:ident, 31) => { to_lower!($d, $src, 30); $d[30] = table[$src[30] as usize]; };
-        ($d:ident, $src:ident, 32) => { to_lower!($d, $src, 31); $d[31] = table[$src[31] as usize]; };
-        ($d:ident, $src:ident, 33) => { to_lower!($d, $src, 32); $d[32] = table[$src[32] as usize]; };
-        ($d:ident, $src:ident, 34) => { to_lower!($d, $src, 33); $d[33] = table[$src[33] as usize]; };
-        ($d:ident, $src:ident, 35) => { to_lower!($d, $src, 34); $d[34] = table[$src[34] as usize]; };
+        ($d:ident, $src:ident, 1) => {
+            $d[0] = table[$src[0] as usize];
+        };
+        ($d:ident, $src:ident, 2) => {
+            to_lower!($d, $src, 1);
+            $d[1] = table[$src[1] as usize];
+        };
+        ($d:ident, $src:ident, 3) => {
+            to_lower!($d, $src, 2);
+            $d[2] = table[$src[2] as usize];
+        };
+        ($d:ident, $src:ident, 4) => {
+            to_lower!($d, $src, 3);
+            $d[3] = table[$src[3] as usize];
+        };
+        ($d:ident, $src:ident, 5) => {
+            to_lower!($d, $src, 4);
+            $d[4] = table[$src[4] as usize];
+        };
+        ($d:ident, $src:ident, 6) => {
+            to_lower!($d, $src, 5);
+            $d[5] = table[$src[5] as usize];
+        };
+        ($d:ident, $src:ident, 7) => {
+            to_lower!($d, $src, 6);
+            $d[6] = table[$src[6] as usize];
+        };
+        ($d:ident, $src:ident, 8) => {
+            to_lower!($d, $src, 7);
+            $d[7] = table[$src[7] as usize];
+        };
+        ($d:ident, $src:ident, 9) => {
+            to_lower!($d, $src, 8);
+            $d[8] = table[$src[8] as usize];
+        };
+        ($d:ident, $src:ident, 10) => {
+            to_lower!($d, $src, 9);
+            $d[9] = table[$src[9] as usize];
+        };
+        ($d:ident, $src:ident, 11) => {
+            to_lower!($d, $src, 10);
+            $d[10] = table[$src[10] as usize];
+        };
+        ($d:ident, $src:ident, 12) => {
+            to_lower!($d, $src, 11);
+            $d[11] = table[$src[11] as usize];
+        };
+        ($d:ident, $src:ident, 13) => {
+            to_lower!($d, $src, 12);
+            $d[12] = table[$src[12] as usize];
+        };
+        ($d:ident, $src:ident, 14) => {
+            to_lower!($d, $src, 13);
+            $d[13] = table[$src[13] as usize];
+        };
+        ($d:ident, $src:ident, 15) => {
+            to_lower!($d, $src, 14);
+            $d[14] = table[$src[14] as usize];
+        };
+        ($d:ident, $src:ident, 16) => {
+            to_lower!($d, $src, 15);
+            $d[15] = table[$src[15] as usize];
+        };
+        ($d:ident, $src:ident, 17) => {
+            to_lower!($d, $src, 16);
+            $d[16] = table[$src[16] as usize];
+        };
+        ($d:ident, $src:ident, 18) => {
+            to_lower!($d, $src, 17);
+            $d[17] = table[$src[17] as usize];
+        };
+        ($d:ident, $src:ident, 19) => {
+            to_lower!($d, $src, 18);
+            $d[18] = table[$src[18] as usize];
+        };
+        ($d:ident, $src:ident, 20) => {
+            to_lower!($d, $src, 19);
+            $d[19] = table[$src[19] as usize];
+        };
+        ($d:ident, $src:ident, 21) => {
+            to_lower!($d, $src, 20);
+            $d[20] = table[$src[20] as usize];
+        };
+        ($d:ident, $src:ident, 22) => {
+            to_lower!($d, $src, 21);
+            $d[21] = table[$src[21] as usize];
+        };
+        ($d:ident, $src:ident, 23) => {
+            to_lower!($d, $src, 22);
+            $d[22] = table[$src[22] as usize];
+        };
+        ($d:ident, $src:ident, 24) => {
+            to_lower!($d, $src, 23);
+            $d[23] = table[$src[23] as usize];
+        };
+        ($d:ident, $src:ident, 25) => {
+            to_lower!($d, $src, 24);
+            $d[24] = table[$src[24] as usize];
+        };
+        ($d:ident, $src:ident, 26) => {
+            to_lower!($d, $src, 25);
+            $d[25] = table[$src[25] as usize];
+        };
+        ($d:ident, $src:ident, 27) => {
+            to_lower!($d, $src, 26);
+            $d[26] = table[$src[26] as usize];
+        };
+        ($d:ident, $src:ident, 28) => {
+            to_lower!($d, $src, 27);
+            $d[27] = table[$src[27] as usize];
+        };
+        ($d:ident, $src:ident, 29) => {
+            to_lower!($d, $src, 28);
+            $d[28] = table[$src[28] as usize];
+        };
+        ($d:ident, $src:ident, 30) => {
+            to_lower!($d, $src, 29);
+            $d[29] = table[$src[29] as usize];
+        };
+        ($d:ident, $src:ident, 31) => {
+            to_lower!($d, $src, 30);
+            $d[30] = table[$src[30] as usize];
+        };
+        ($d:ident, $src:ident, 32) => {
+            to_lower!($d, $src, 31);
+            $d[31] = table[$src[31] as usize];
+        };
+        ($d:ident, $src:ident, 33) => {
+            to_lower!($d, $src, 32);
+            $d[32] = table[$src[32] as usize];
+        };
+        ($d:ident, $src:ident, 34) => {
+            to_lower!($d, $src, 33);
+            $d[33] = table[$src[33] as usize];
+        };
+        ($d:ident, $src:ident, 35) => {
+            to_lower!($d, $src, 34);
+            $d[34] = table[$src[34] as usize];
+        };
     }
 
-    assert!(len < super::MAX_HEADER_NAME_LEN,
-            "header name too long -- max length is {}",
-            super::MAX_HEADER_NAME_LEN);
+    assert!(
+        len < super::MAX_HEADER_NAME_LEN,
+        "header name too long -- max length is {}",
+        super::MAX_HEADER_NAME_LEN
+    );
 
     match len {
         0 => Err(InvalidHeaderName::new()),
@@ -1312,19 +1420,22 @@ fn parse_hdr<'a>(
         15 => {
             to_lower!(b, data, 15);
 
-            if eq!(b == b'a' b'c' b'c' b'e' b'p' b't' b'-') { // accept-
+            if eq!(b == b'a' b'c' b'c' b'e' b'p' b't' b'-') {
+                // accept-
                 if eq!(b[7] == b'e' b'n' b'c' b'o' b'd' b'i' b'n' b'g') {
-                    return Ok(AcceptEncoding.into())
+                    return Ok(AcceptEncoding.into());
                 } else if eq!(b[7] == b'l' b'a' b'n' b'g' b'u' b'a' b'g' b'e') {
-                    return Ok(AcceptLanguage.into())
+                    return Ok(AcceptLanguage.into());
                 }
-            } else if eq!(b == b'p' b'u' b'b' b'l' b'i' b'c' b'-' b'k' b'e' b'y' b'-' b'p' b'i' b'n' b's') {
-                return Ok(PublicKeyPins.into())
-            } else if eq!(b == b'x' b'-' b'f' b'r' b'a' b'm' b'e' b'-' b'o' b'p' b't' b'i' b'o' b'n' b's') {
-                return Ok(XFrameOptions.into())
-            }
-            else if eq!(b == b'r' b'e' b'f' b'e' b'r' b'r' b'e' b'r' b'-' b'p' b'o' b'l' b'i' b'c' b'y') {
-                return Ok(ReferrerPolicy.into())
+            } else if eq!(b == b'p' b'u' b'b' b'l' b'i' b'c' b'-' b'k' b'e' b'y' b'-' b'p' b'i' b'n' b's')
+            {
+                return Ok(PublicKeyPins.into());
+            } else if eq!(b == b'x' b'-' b'f' b'r' b'a' b'm' b'e' b'-' b'o' b'p' b't' b'i' b'o' b'n' b's')
+            {
+                return Ok(XFrameOptions.into());
+            } else if eq!(b == b'r' b'e' b'f' b'e' b'r' b'r' b'e' b'r' b'-' b'p' b'o' b'l' b'i' b'c' b'y')
+            {
+                return Ok(ReferrerPolicy.into());
             }
 
             validate(b, len)
@@ -1334,16 +1445,18 @@ fn parse_hdr<'a>(
 
             if eq!(b == b'c' b'o' b'n' b't' b'e' b'n' b't' b'-') {
                 if eq!(b[8] == b'l' b'a' b'n' b'g' b'u' b'a' b'g' b'e') {
-                    return Ok(ContentLanguage.into())
+                    return Ok(ContentLanguage.into());
                 } else if eq!(b[8] == b'l' b'o' b'c' b'a' b't' b'i' b'o' b'n') {
-                    return Ok(ContentLocation.into())
+                    return Ok(ContentLocation.into());
                 } else if eq!(b[8] == b'e' b'n' b'c' b'o' b'd' b'i' b'n' b'g') {
-                    return Ok(ContentEncoding.into())
+                    return Ok(ContentEncoding.into());
                 }
-            } else if eq!(b == b'w' b'w' b'w' b'-' b'a' b'u' b't' b'h' b'e' b'n' b't' b'i' b'c' b'a' b't' b'e') {
-                return Ok(WwwAuthenticate.into())
-            } else if eq!(b == b'x' b'-' b'x' b's' b's' b'-' b'p' b'r' b'o' b't' b'e' b'c' b't' b'i' b'o' b'n') {
-                return Ok(XXssProtection.into())
+            } else if eq!(b == b'w' b'w' b'w' b'-' b'a' b'u' b't' b'h' b'e' b'n' b't' b'i' b'c' b'a' b't' b'e')
+            {
+                return Ok(WwwAuthenticate.into());
+            } else if eq!(b == b'x' b'-' b'x' b's' b's' b'-' b'p' b'r' b'o' b't' b'e' b'c' b't' b'i' b'o' b'n')
+            {
+                return Ok(XXssProtection.into());
             }
 
             validate(b, len)
@@ -1351,11 +1464,14 @@ fn parse_hdr<'a>(
         17 => {
             to_lower!(b, data, 17);
 
-            if eq!(b == b't' b'r' b'a' b'n' b's' b'f' b'e' b'r' b'-' b'e' b'n' b'c' b'o' b'd' b'i' b'n' b'g') {
+            if eq!(b == b't' b'r' b'a' b'n' b's' b'f' b'e' b'r' b'-' b'e' b'n' b'c' b'o' b'd' b'i' b'n' b'g')
+            {
                 Ok(TransferEncoding.into())
-            } else if eq!(b == b'i' b'f' b'-' b'm' b'o' b'd' b'i' b'f' b'i' b'e' b'd' b'-' b's' b'i' b'n' b'c' b'e') {
+            } else if eq!(b == b'i' b'f' b'-' b'm' b'o' b'd' b'i' b'f' b'i' b'e' b'd' b'-' b's' b'i' b'n' b'c' b'e')
+            {
                 Ok(IfModifiedSince.into())
-            } else if eq!(b == b's' b'e' b'c' b'-' b'w' b'e' b'b' b's' b'o' b'c' b'k' b'e' b't' b'-' b'k' b'e' b'y') {
+            } else if eq!(b == b's' b'e' b'c' b'-' b'w' b'e' b'b' b's' b'o' b'c' b'k' b'e' b't' b'-' b'k' b'e' b'y')
+            {
                 Ok(SecWebSocketKey.into())
             } else {
                 validate(b, len)
@@ -1364,7 +1480,8 @@ fn parse_hdr<'a>(
         18 => {
             to_lower!(b, data, 18);
 
-            if eq!(b == b'p' b'r' b'o' b'x' b'y' b'-' b'a' b'u' b't' b'h' b'e' b'n' b't' b'i' b'c' b'a' b't' b'e') {
+            if eq!(b == b'p' b'r' b'o' b'x' b'y' b'-' b'a' b'u' b't' b'h' b'e' b'n' b't' b'i' b'c' b'a' b't' b'e')
+            {
                 Ok(ProxyAuthenticate.into())
             } else {
                 validate(b, len)
@@ -1373,11 +1490,14 @@ fn parse_hdr<'a>(
         19 => {
             to_lower!(b, data, 19);
 
-            if eq!(b == b'c' b'o' b'n' b't' b'e' b'n' b't' b'-' b'd' b'i' b's' b'p' b'o' b's' b'i' b't' b'i' b'o' b'n') {
+            if eq!(b == b'c' b'o' b'n' b't' b'e' b'n' b't' b'-' b'd' b'i' b's' b'p' b'o' b's' b'i' b't' b'i' b'o' b'n')
+            {
                 Ok(ContentDisposition.into())
-            } else if eq!(b == b'i' b'f' b'-' b'u' b'n' b'm' b'o' b'd' b'i' b'f' b'i' b'e' b'd' b'-' b's' b'i' b'n' b'c' b'e') {
+            } else if eq!(b == b'i' b'f' b'-' b'u' b'n' b'm' b'o' b'd' b'i' b'f' b'i' b'e' b'd' b'-' b's' b'i' b'n' b'c' b'e')
+            {
                 Ok(IfUnmodifiedSince.into())
-            } else if eq!(b == b'p' b'r' b'o' b'x' b'y' b'-' b'a' b'u' b't' b'h' b'o' b'r' b'i' b'z' b'a' b't' b'i' b'o' b'n') {
+            } else if eq!(b == b'p' b'r' b'o' b'x' b'y' b'-' b'a' b'u' b't' b'h' b'o' b'r' b'i' b'z' b'a' b't' b'i' b'o' b'n')
+            {
                 Ok(ProxyAuthorization.into())
             } else {
                 validate(b, len)
@@ -1386,7 +1506,8 @@ fn parse_hdr<'a>(
         20 => {
             to_lower!(b, data, 20);
 
-            if eq!(b == b's' b'e' b'c' b'-' b'w' b'e' b'b' b's' b'o' b'c' b'k' b'e' b't' b'-' b'a' b'c' b'c' b'e' b'p' b't') {
+            if eq!(b == b's' b'e' b'c' b'-' b'w' b'e' b'b' b's' b'o' b'c' b'k' b'e' b't' b'-' b'a' b'c' b'c' b'e' b'p' b't')
+            {
                 Ok(SecWebSocketAccept.into())
             } else {
                 validate(b, len)
@@ -1395,7 +1516,8 @@ fn parse_hdr<'a>(
         21 => {
             to_lower!(b, data, 21);
 
-            if eq!(b == b's' b'e' b'c' b'-' b'w' b'e' b'b' b's' b'o' b'c' b'k' b'e' b't' b'-' b'v' b'e' b'r' b's' b'i' b'o' b'n') {
+            if eq!(b == b's' b'e' b'c' b'-' b'w' b'e' b'b' b's' b'o' b'c' b'k' b'e' b't' b'-' b'v' b'e' b'r' b's' b'i' b'o' b'n')
+            {
                 Ok(SecWebSocketVersion.into())
             } else {
                 validate(b, len)
@@ -1404,13 +1526,17 @@ fn parse_hdr<'a>(
         22 => {
             to_lower!(b, data, 22);
 
-            if eq!(b == b'a' b'c' b'c' b'e' b's' b's' b'-' b'c' b'o' b'n' b't' b'r' b'o' b'l' b'-' b'm' b'a' b'x' b'-' b'a' b'g' b'e') {
+            if eq!(b == b'a' b'c' b'c' b'e' b's' b's' b'-' b'c' b'o' b'n' b't' b'r' b'o' b'l' b'-' b'm' b'a' b'x' b'-' b'a' b'g' b'e')
+            {
                 Ok(AccessControlMaxAge.into())
-            } else if eq!(b == b'x' b'-' b'c' b'o' b'n' b't' b'e' b'n' b't' b'-' b't' b'y' b'p' b'e' b'-' b'o' b'p' b't' b'i' b'o' b'n' b's') {
+            } else if eq!(b == b'x' b'-' b'c' b'o' b'n' b't' b'e' b'n' b't' b'-' b't' b'y' b'p' b'e' b'-' b'o' b'p' b't' b'i' b'o' b'n' b's')
+            {
                 Ok(XContentTypeOptions.into())
-            } else if eq!(b == b'x' b'-' b'd' b'n' b's' b'-' b'p' b'r' b'e' b'f' b'e' b't' b'c' b'h' b'-' b'c' b'o' b'n' b't' b'r' b'o' b'l') {
+            } else if eq!(b == b'x' b'-' b'd' b'n' b's' b'-' b'p' b'r' b'e' b'f' b'e' b't' b'c' b'h' b'-' b'c' b'o' b'n' b't' b'r' b'o' b'l')
+            {
                 Ok(XDnsPrefetchControl.into())
-            } else if eq!(b == b's' b'e' b'c' b'-' b'w' b'e' b'b' b's' b'o' b'c' b'k' b'e' b't' b'-' b'p' b'r' b'o' b't' b'o' b'c' b'o' b'l') {
+            } else if eq!(b == b's' b'e' b'c' b'-' b'w' b'e' b'b' b's' b'o' b'c' b'k' b'e' b't' b'-' b'p' b'r' b'o' b't' b'o' b'c' b'o' b'l')
+            {
                 Ok(SecWebSocketProtocol.into())
             } else {
                 validate(b, len)
@@ -1419,7 +1545,8 @@ fn parse_hdr<'a>(
         23 => {
             to_lower!(b, data, 23);
 
-            if eq!(b == b'c' b'o' b'n' b't' b'e' b'n' b't' b'-' b's' b'e' b'c' b'u' b'r' b'i' b't' b'y' b'-' b'p' b'o' b'l' b'i' b'c' b'y') {
+            if eq!(b == b'c' b'o' b'n' b't' b'e' b'n' b't' b'-' b's' b'e' b'c' b'u' b'r' b'i' b't' b'y' b'-' b'p' b'o' b'l' b'i' b'c' b'y')
+            {
                 Ok(ContentSecurityPolicy.into())
             } else {
                 validate(b, len)
@@ -1428,7 +1555,8 @@ fn parse_hdr<'a>(
         24 => {
             to_lower!(b, data, 24);
 
-            if eq!(b == b's' b'e' b'c' b'-' b'w' b'e' b'b' b's' b'o' b'c' b'k' b'e' b't' b'-' b'e' b'x' b't' b'e' b'n' b's' b'i' b'o' b'n' b's') {
+            if eq!(b == b's' b'e' b'c' b'-' b'w' b'e' b'b' b's' b'o' b'c' b'k' b'e' b't' b'-' b'e' b'x' b't' b'e' b'n' b's' b'i' b'o' b'n' b's')
+            {
                 Ok(SecWebSocketExtensions.into())
             } else {
                 validate(b, len)
@@ -1437,9 +1565,11 @@ fn parse_hdr<'a>(
         25 => {
             to_lower!(b, data, 25);
 
-            if eq!(b == b's' b't' b'r' b'i' b'c' b't' b'-' b't' b'r' b'a' b'n' b's' b'p' b'o' b'r' b't' b'-' b's' b'e' b'c' b'u' b'r' b'i' b't' b'y') {
+            if eq!(b == b's' b't' b'r' b'i' b'c' b't' b'-' b't' b'r' b'a' b'n' b's' b'p' b'o' b'r' b't' b'-' b's' b'e' b'c' b'u' b'r' b'i' b't' b'y')
+            {
                 Ok(StrictTransportSecurity.into())
-            } else if eq!(b == b'u' b'p' b'g' b'r' b'a' b'd' b'e' b'-' b'i' b'n' b's' b'e' b'c' b'u' b'r' b'e' b'-' b'r' b'e' b'q' b'u' b'e' b's' b't' b's') {
+            } else if eq!(b == b'u' b'p' b'g' b'r' b'a' b'd' b'e' b'-' b'i' b'n' b's' b'e' b'c' b'u' b'r' b'e' b'-' b'r' b'e' b'q' b'u' b'e' b's' b't' b's')
+            {
                 Ok(UpgradeInsecureRequests.into())
             } else {
                 validate(b, len)
@@ -1448,9 +1578,11 @@ fn parse_hdr<'a>(
         27 => {
             to_lower!(b, data, 27);
 
-            if eq!(b == b'a' b'c' b'c' b'e' b's' b's' b'-' b'c' b'o' b'n' b't' b'r' b'o' b'l' b'-' b'a' b'l' b'l' b'o' b'w' b'-' b'o' b'r' b'i' b'g' b'i' b'n') {
+            if eq!(b == b'a' b'c' b'c' b'e' b's' b's' b'-' b'c' b'o' b'n' b't' b'r' b'o' b'l' b'-' b'a' b'l' b'l' b'o' b'w' b'-' b'o' b'r' b'i' b'g' b'i' b'n')
+            {
                 Ok(AccessControlAllowOrigin.into())
-            } else if eq!(b == b'p' b'u' b'b' b'l' b'i' b'c' b'-' b'k' b'e' b'y' b'-' b'p' b'i' b'n' b's' b'-' b'r' b'e' b'p' b'o' b'r' b't' b'-' b'o' b'n' b'l' b'y') {
+            } else if eq!(b == b'p' b'u' b'b' b'l' b'i' b'c' b'-' b'k' b'e' b'y' b'-' b'p' b'i' b'n' b's' b'-' b'r' b'e' b'p' b'o' b'r' b't' b'-' b'o' b'n' b'l' b'y')
+            {
                 Ok(PublicKeyPinsReportOnly.into())
             } else {
                 validate(b, len)
@@ -1459,11 +1591,12 @@ fn parse_hdr<'a>(
         28 => {
             to_lower!(b, data, 28);
 
-            if eq!(b == b'a' b'c' b'c' b'e' b's' b's' b'-' b'c' b'o' b'n' b't' b'r' b'o' b'l' b'-' b'a' b'l' b'l' b'o' b'w' b'-') {
+            if eq!(b == b'a' b'c' b'c' b'e' b's' b's' b'-' b'c' b'o' b'n' b't' b'r' b'o' b'l' b'-' b'a' b'l' b'l' b'o' b'w' b'-')
+            {
                 if eq!(b[21] == b'h' b'e' b'a' b'd' b'e' b'r' b's') {
-                    return Ok(AccessControlAllowHeaders.into())
+                    return Ok(AccessControlAllowHeaders.into());
                 } else if eq!(b[21] == b'm' b'e' b't' b'h' b'o' b'd' b's') {
-                    return Ok(AccessControlAllowMethods.into())
+                    return Ok(AccessControlAllowMethods.into());
                 }
             }
 
@@ -1472,11 +1605,14 @@ fn parse_hdr<'a>(
         29 => {
             to_lower!(b, data, 29);
 
-            if eq!(b == b'a' b'c' b'c' b'e' b's' b's' b'-' b'c' b'o' b'n' b't' b'r' b'o' b'l' b'-') {
-                if eq!(b[15] == b'e' b'x' b'p' b'o' b's' b'e' b'-' b'h' b'e' b'a' b'd' b'e' b'r' b's') {
-                    return Ok(AccessControlExposeHeaders.into())
-                } else if eq!(b[15] == b'r' b'e' b'q' b'u' b'e' b's' b't' b'-' b'm' b'e' b't' b'h' b'o' b'd') {
-                    return Ok(AccessControlRequestMethod.into())
+            if eq!(b == b'a' b'c' b'c' b'e' b's' b's' b'-' b'c' b'o' b'n' b't' b'r' b'o' b'l' b'-')
+            {
+                if eq!(b[15] == b'e' b'x' b'p' b'o' b's' b'e' b'-' b'h' b'e' b'a' b'd' b'e' b'r' b's')
+                {
+                    return Ok(AccessControlExposeHeaders.into());
+                } else if eq!(b[15] == b'r' b'e' b'q' b'u' b'e' b's' b't' b'-' b'm' b'e' b't' b'h' b'o' b'd')
+                {
+                    return Ok(AccessControlRequestMethod.into());
                 }
             }
 
@@ -1485,7 +1621,8 @@ fn parse_hdr<'a>(
         30 => {
             to_lower!(b, data, 30);
 
-            if eq!(b == b'a' b'c' b'c' b'e' b's' b's' b'-' b'c' b'o' b'n' b't' b'r' b'o' b'l' b'-' b'r' b'e' b'q' b'u' b'e' b's' b't' b'-' b'h' b'e' b'a' b'd' b'e' b'r' b's') {
+            if eq!(b == b'a' b'c' b'c' b'e' b's' b's' b'-' b'c' b'o' b'n' b't' b'r' b'o' b'l' b'-' b'r' b'e' b'q' b'u' b'e' b's' b't' b'-' b'h' b'e' b'a' b'd' b'e' b'r' b's')
+            {
                 Ok(AccessControlRequestHeaders.into())
             } else {
                 validate(b, len)
@@ -1494,7 +1631,8 @@ fn parse_hdr<'a>(
         32 => {
             to_lower!(b, data, 32);
 
-            if eq!(b == b'a' b'c' b'c' b'e' b's' b's' b'-' b'c' b'o' b'n' b't' b'r' b'o' b'l' b'-' b'a' b'l' b'l' b'o' b'w' b'-' b'c' b'r' b'e' b'd' b'e' b'n' b't' b'i' b'a' b'l' b's') {
+            if eq!(b == b'a' b'c' b'c' b'e' b's' b's' b'-' b'c' b'o' b'n' b't' b'r' b'o' b'l' b'-' b'a' b'l' b'l' b'o' b'w' b'-' b'c' b'r' b'e' b'd' b'e' b'n' b't' b'i' b'a' b'l' b's')
+            {
                 Ok(AccessControlAllowCredentials.into())
             } else {
                 validate(b, len)
@@ -1503,7 +1641,8 @@ fn parse_hdr<'a>(
         35 => {
             to_lower!(b, data, 35);
 
-            if eq!(b == b'c' b'o' b'n' b't' b'e' b'n' b't' b'-' b's' b'e' b'c' b'u' b'r' b'i' b't' b'y' b'-' b'p' b'o' b'l' b'i' b'c' b'y' b'-' b'r' b'e' b'p' b'o' b'r' b't' b'-' b'o' b'n' b'l' b'y') {
+            if eq!(b == b'c' b'o' b'n' b't' b'e' b'n' b't' b'-' b's' b'e' b'c' b'u' b'r' b'i' b't' b'y' b'-' b'p' b'o' b'l' b'i' b'c' b'y' b'-' b'r' b'e' b'p' b'o' b'r' b't' b'-' b'o' b'n' b'l' b'y')
+            {
                 Ok(ContentSecurityPolicyReportOnly.into())
             } else {
                 validate(b, len)
@@ -1554,7 +1693,9 @@ fn parse_hdr<'a>(
         len if len > 64 => Ok(HdrName::custom(data, false)),
         len => {
             // Read from data into the buffer - transforming using `table` as we go
-            data.iter().zip(b.iter_mut()).for_each(|(index, out)| *out = table[*index as usize]);
+            data.iter()
+                .zip(b.iter_mut())
+                .for_each(|(index, out)| *out = table[*index as usize]);
             match &b[0..len] {
                 b"te" => Ok(Te.into()),
                 b"age" => Ok(Age.into()),
@@ -1643,11 +1784,11 @@ fn parse_hdr<'a>(
     }
 }
 
-
-
 impl<'a> From<StandardHeader> for HdrName<'a> {
     fn from(hdr: StandardHeader) -> HdrName<'a> {
-        HdrName { inner: Repr::Standard(hdr) }
+        HdrName {
+            inner: Repr::Standard(hdr),
+        }
     }
 }
 
@@ -1667,7 +1808,7 @@ impl HeaderName {
                 Ok(Custom(val).into())
             }
             Repr::Custom(MaybeLower { buf, lower: false }) => {
-                use bytes::{BufMut};
+                use bytes::BufMut;
                 let mut dst = BytesMut::with_capacity(buf.len());
 
                 for b in buf.iter() {
@@ -1733,11 +1874,11 @@ impl HeaderName {
     /// Converts a static string to a HTTP header name.
     ///
     /// This function panics when the static string is a invalid header.
-    /// 
-    /// This function requires the static string to only contain lowercase 
-    /// characters, numerals and symbols, as per the HTTP/2.0 specification 
+    ///
+    /// This function requires the static string to only contain lowercase
+    /// characters, numerals and symbols, as per the HTTP/2.0 specification
     /// and header names internal representation within this library.
-    /// 
+    ///
     ///
     /// # Examples
     ///
@@ -1746,21 +1887,21 @@ impl HeaderName {
     /// // Parsing a standard header
     /// let hdr = HeaderName::from_static("content-length");
     /// assert_eq!(CONTENT_LENGTH, hdr);
-    /// 
+    ///
     /// // Parsing a custom header
     /// let CUSTOM_HEADER: &'static str = "custom-header";
-    /// 
+    ///
     /// let a = HeaderName::from_lowercase(b"custom-header").unwrap();
     /// let b = HeaderName::from_static(CUSTOM_HEADER);
     /// assert_eq!(a, b);
     /// ```
-    /// 
+    ///
     /// ```should_panic
     /// # use http::header::*;
     /// #
     /// // Parsing a header that contains invalid symbols(s):
     /// HeaderName::from_static("content{}{}length"); // This line panics!
-    /// 
+    ///
     /// // Parsing a header that contains invalid uppercase characters.
     /// let a = HeaderName::from_static("foobar");
     /// let b = HeaderName::from_static("FOOBAR"); // This line panics!
@@ -1773,11 +1914,17 @@ impl HeaderName {
         match parse_hdr(bytes, &mut buf, &HEADER_CHARS_H2) {
             Ok(hdr_name) => match hdr_name.inner {
                 Repr::Standard(std) => std.into(),
-                Repr::Custom(MaybeLower { buf: _, lower: true }) => {
+                Repr::Custom(MaybeLower {
+                    buf: _,
+                    lower: true,
+                }) => {
                     let val = ByteStr::from_static(src);
                     Custom(val).into()
-                },
-                Repr::Custom(MaybeLower { buf: _, lower: false }) => {
+                }
+                Repr::Custom(MaybeLower {
+                    buf: _,
+                    lower: false,
+                }) => {
                     // With lower false, the string is left unchecked by
                     // parse_hdr and must be validated manually.
                     for &b in bytes.iter() {
@@ -1791,7 +1938,7 @@ impl HeaderName {
                 }
             },
 
-            Err(_) => panic!("invalid header name")
+            Err(_) => panic!("invalid header name"),
         }
     }
 
@@ -2007,6 +2154,7 @@ impl fmt::Display for InvalidHeaderName {
     }
 }
 
+#[cfg(feature = "std")]
 impl Error for InvalidHeaderName {}
 
 // ===== HdrName =====
@@ -2023,7 +2171,8 @@ impl<'a> HdrName<'a> {
 
     #[allow(deprecated)]
     pub fn from_bytes<F, U>(hdr: &[u8], f: F) -> Result<U, InvalidHeaderName>
-        where F: FnOnce(HdrName<'_>) -> U,
+    where
+        F: FnOnce(HdrName<'_>) -> U,
     {
         #[allow(deprecated)]
         let mut buf = unsafe { mem::uninitialized() };
@@ -2132,15 +2281,16 @@ fn eq_ignore_ascii_case(lower: &[u8], s: &[u8]) -> bool {
         return false;
     }
 
-    lower.iter().zip(s).all(|(a, b)| {
-        *a == HEADER_CHARS[*b as usize]
-    })
+    lower
+        .iter()
+        .zip(s)
+        .all(|(a, b)| *a == HEADER_CHARS[*b as usize])
 }
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use self::StandardHeader::Vary;
+    use super::*;
 
     #[test]
     fn test_bounds() {
@@ -2152,7 +2302,11 @@ mod tests {
     fn test_parse_invalid_headers() {
         for i in 0..128 {
             let hdr = vec![1u8; i];
-            assert!(HeaderName::from_bytes(&hdr).is_err(), "{} invalid header chars did not fail", i);
+            assert!(
+                HeaderName::from_bytes(&hdr).is_err(),
+                "{} invalid header chars did not fail",
+                i
+            );
         }
     }
 
@@ -2173,7 +2327,10 @@ mod tests {
             }),
         });
 
-        assert_eq!(name.inner, Repr::Custom(Custom(ByteStr::from_static("hello-world"))));
+        assert_eq!(
+            name.inner,
+            Repr::Custom(Custom(ByteStr::from_static("hello-world")))
+        );
 
         let name = HeaderName::from(HdrName {
             inner: Repr::Custom(MaybeLower {
@@ -2182,50 +2339,69 @@ mod tests {
             }),
         });
 
-        assert_eq!(name.inner, Repr::Custom(Custom(ByteStr::from_static("hello-world"))));
+        assert_eq!(
+            name.inner,
+            Repr::Custom(Custom(ByteStr::from_static("hello-world")))
+        );
     }
 
     #[test]
     fn test_eq_hdr_name() {
         use self::StandardHeader::Vary;
 
-        let a = HeaderName { inner: Repr::Standard(Vary) };
-        let b = HdrName { inner: Repr::Standard(Vary) };
+        let a = HeaderName {
+            inner: Repr::Standard(Vary),
+        };
+        let b = HdrName {
+            inner: Repr::Standard(Vary),
+        };
 
         assert_eq!(a, b);
 
-        let a = HeaderName { inner: Repr::Custom(Custom(ByteStr::from_static("vaary"))) };
+        let a = HeaderName {
+            inner: Repr::Custom(Custom(ByteStr::from_static("vaary"))),
+        };
         assert_ne!(a, b);
 
-        let b = HdrName { inner: Repr::Custom(MaybeLower {
-            buf: b"vaary",
-            lower: true,
-        })};
+        let b = HdrName {
+            inner: Repr::Custom(MaybeLower {
+                buf: b"vaary",
+                lower: true,
+            }),
+        };
 
         assert_eq!(a, b);
 
-        let b = HdrName { inner: Repr::Custom(MaybeLower {
-            buf: b"vaary",
-            lower: false,
-        })};
+        let b = HdrName {
+            inner: Repr::Custom(MaybeLower {
+                buf: b"vaary",
+                lower: false,
+            }),
+        };
 
         assert_eq!(a, b);
 
-        let b = HdrName { inner: Repr::Custom(MaybeLower {
-            buf: b"VAARY",
-            lower: false,
-        })};
+        let b = HdrName {
+            inner: Repr::Custom(MaybeLower {
+                buf: b"VAARY",
+                lower: false,
+            }),
+        };
 
         assert_eq!(a, b);
 
-        let a = HeaderName { inner: Repr::Standard(Vary) };
+        let a = HeaderName {
+            inner: Repr::Standard(Vary),
+        };
         assert_ne!(a, b);
     }
 
     #[test]
     fn test_from_static_std() {
-        let a = HeaderName { inner: Repr::Standard(Vary) };
-        
+        let a = HeaderName {
+            inner: Repr::Standard(Vary),
+        };
+
         let b = HeaderName::from_static("vary");
         assert_eq!(a, b);
 
@@ -2237,18 +2413,20 @@ mod tests {
     #[should_panic]
     fn test_from_static_std_uppercase() {
         HeaderName::from_static("Vary");
-    } 
+    }
 
     #[test]
     #[should_panic]
     fn test_from_static_std_symbol() {
         HeaderName::from_static("vary{}");
-    } 
+    }
 
     // MaybeLower { lower: true }
     #[test]
     fn test_from_static_custom_short() {
-        let a = HeaderName { inner: Repr::Custom(Custom(ByteStr::from_static("customheader"))) };
+        let a = HeaderName {
+            inner: Repr::Custom(Custom(ByteStr::from_static("customheader"))),
+        };
         let b = HeaderName::from_static("customheader");
         assert_eq!(a, b);
     }
@@ -2268,11 +2446,13 @@ mod tests {
     // MaybeLower { lower: false }
     #[test]
     fn test_from_static_custom_long() {
-        let a = HeaderName { inner: Repr::Custom(Custom(ByteStr::from_static(
-            "longer-than-63--thisheaderislongerthansixtythreecharactersandthushandleddifferent"
-        ))) };
+        let a = HeaderName {
+            inner: Repr::Custom(Custom(ByteStr::from_static(
+                "longer-than-63--thisheaderislongerthansixtythreecharactersandthushandleddifferent",
+            ))),
+        };
         let b = HeaderName::from_static(
-            "longer-than-63--thisheaderislongerthansixtythreecharactersandthushandleddifferent"
+            "longer-than-63--thisheaderislongerthansixtythreecharactersandthushandleddifferent",
         );
         assert_eq!(a, b);
     }
@@ -2281,7 +2461,7 @@ mod tests {
     #[should_panic]
     fn test_from_static_custom_long_uppercase() {
         HeaderName::from_static(
-            "Longer-Than-63--ThisHeaderIsLongerThanSixtyThreeCharactersAndThusHandledDifferent"
+            "Longer-Than-63--ThisHeaderIsLongerThanSixtyThreeCharactersAndThusHandledDifferent",
         );
     }
 
@@ -2295,7 +2475,9 @@ mod tests {
 
     #[test]
     fn test_from_static_custom_single_char() {
-        let a = HeaderName { inner: Repr::Custom(Custom(ByteStr::from_static("a"))) };
+        let a = HeaderName {
+            inner: Repr::Custom(Custom(ByteStr::from_static("a"))),
+        };
         let b = HeaderName::from_static("a");
         assert_eq!(a, b);
     }

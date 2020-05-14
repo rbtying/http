@@ -21,10 +21,15 @@ keywords = ["http"]
 categories = ["web-programming"]
 edition = "2018"
 
+[features]
+default = ["std"]
+std = ["no-std-compat/std"]
+
 [dependencies]
 bytes = "0.5"
 fnv = "1.0.5"
-itoa = "0.4.1"
+itoa = { version = "0.4.1", default-features = false }
+no-std-compat = { version = "0.4.0", features = ["alloc"] }
 
 [dev-dependencies]
 indexmap = "1.0"

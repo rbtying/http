@@ -1,4 +1,5 @@
 #![doc(html_root_url = "https://docs.rs/http/0.2.1")]
+#![cfg_attr(not(feature = "std"), no_std)]
 
 //! A general purpose library of common HTTP types
 //!
@@ -159,6 +160,8 @@
 //! ```
 
 #![deny(warnings, missing_docs, missing_debug_implementations)]
+
+extern crate no_std_compat as std;
 
 #[cfg(test)]
 #[macro_use]

@@ -21,12 +21,14 @@
 //! assert_eq!(uri.host(), Some("www.rust-lang.org"));
 //! assert_eq!(uri.path(), "/install.html");
 //! ```
+use std::prelude::v1::*;
 
 use crate::byte_str::ByteStr;
 use std::convert::TryFrom;
 
 use bytes::Bytes;
 
+#[cfg(feature = "std")]
 use std::error::Error;
 use std::hash::{Hash, Hasher};
 use std::str::{self, FromStr};
@@ -151,32 +153,32 @@ const MAX_LEN: usize = (u16::MAX - 1) as usize;
 // of such valid entries is valid UTF-8.
 const URI_CHARS: [u8; 256] = [
     //  0      1      2      3      4      5      6      7      8      9
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, //   x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, //  1x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, //  2x
-        0,     0,     0,  b'!',     0,  b'#',  b'$',     0,  b'&', b'\'', //  3x
-     b'(',  b')',  b'*',  b'+',  b',',  b'-',  b'.',  b'/',  b'0',  b'1', //  4x
-     b'2',  b'3',  b'4',  b'5',  b'6',  b'7',  b'8',  b'9',  b':',  b';', //  5x
-        0,  b'=',     0,  b'?',  b'@',  b'A',  b'B',  b'C',  b'D',  b'E', //  6x
-     b'F',  b'G',  b'H',  b'I',  b'J',  b'K',  b'L',  b'M',  b'N',  b'O', //  7x
-     b'P',  b'Q',  b'R',  b'S',  b'T',  b'U',  b'V',  b'W',  b'X',  b'Y', //  8x
-     b'Z',  b'[',     0,  b']',     0,  b'_',     0,  b'a',  b'b',  b'c', //  9x
-     b'd',  b'e',  b'f',  b'g',  b'h',  b'i',  b'j',  b'k',  b'l',  b'm', // 10x
-     b'n',  b'o',  b'p',  b'q',  b'r',  b's',  b't',  b'u',  b'v',  b'w', // 11x
-     b'x',  b'y',  b'z',     0,     0,     0,  b'~',     0,     0,     0, // 12x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, // 13x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, // 14x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, // 15x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, // 16x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, // 17x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, // 18x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, // 19x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, // 20x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, // 21x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, // 22x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, // 23x
-        0,     0,     0,     0,     0,     0,     0,     0,     0,     0, // 24x
-        0,     0,     0,     0,     0,     0                              // 25x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //   x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //  1x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //  2x
+    0, 0, 0, b'!', 0, b'#', b'$', 0, b'&', b'\'', //  3x
+    b'(', b')', b'*', b'+', b',', b'-', b'.', b'/', b'0', b'1', //  4x
+    b'2', b'3', b'4', b'5', b'6', b'7', b'8', b'9', b':', b';', //  5x
+    0, b'=', 0, b'?', b'@', b'A', b'B', b'C', b'D', b'E', //  6x
+    b'F', b'G', b'H', b'I', b'J', b'K', b'L', b'M', b'N', b'O', //  7x
+    b'P', b'Q', b'R', b'S', b'T', b'U', b'V', b'W', b'X', b'Y', //  8x
+    b'Z', b'[', 0, b']', 0, b'_', 0, b'a', b'b', b'c', //  9x
+    b'd', b'e', b'f', b'g', b'h', b'i', b'j', b'k', b'l', b'm', // 10x
+    b'n', b'o', b'p', b'q', b'r', b's', b't', b'u', b'v', b'w', // 11x
+    b'x', b'y', b'z', 0, 0, 0, b'~', 0, 0, 0, // 12x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 13x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 14x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 15x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 16x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 17x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 18x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 19x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 20x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 21x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 22x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 23x
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 24x
+    0, 0, 0, 0, 0, 0, // 25x
 ];
 
 impl Uri {
@@ -1055,6 +1057,7 @@ impl fmt::Display for InvalidUri {
     }
 }
 
+#[cfg(feature = "std")]
 impl Error for InvalidUri {}
 
 impl fmt::Display for InvalidUriParts {
@@ -1063,6 +1066,7 @@ impl fmt::Display for InvalidUriParts {
     }
 }
 
+#[cfg(feature = "std")]
 impl Error for InvalidUriParts {}
 
 impl Hash for Uri {

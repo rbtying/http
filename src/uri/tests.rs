@@ -1,3 +1,5 @@
+use std::prelude::v1::*;
+
 use std::str::FromStr;
 
 use super::{ErrorKind, InvalidUri, Port, Uri, URI_CHARS};

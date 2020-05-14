@@ -1,3 +1,5 @@
+use std::prelude::v1::*;
+
 use std::convert::TryFrom;
 use std::hash::{Hash, Hasher};
 use std::str::FromStr;
@@ -49,7 +51,6 @@ impl Authority {
         Authority::from_shared(Bytes::from_static(src.as_bytes()))
             .expect("static str is not valid authority")
     }
-
 
     /// Attempt to convert a `Bytes` buffer to a `Authority`.
     ///
@@ -638,8 +639,7 @@ mod tests {
         let err = Authority::try_from([0xc0u8].as_ref()).unwrap_err();
         assert_eq!(err.0, ErrorKind::InvalidUriChar);
 
-        let err = Authority::from_shared(Bytes::from_static([0xc0u8].as_ref()))
-            .unwrap_err();
+        let err = Authority::from_shared(Bytes::from_static([0xc0u8].as_ref())).unwrap_err();
         assert_eq!(err.0, ErrorKind::InvalidUriChar);
     }
 }
