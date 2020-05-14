@@ -23,11 +23,14 @@ edition = "2018"
 
 [features]
 default = ["std"]
-std = ["no-std-compat/std"]
+std = ["no-std-compat/std", "bytes/std", "fnv/std", "itoa/std"]
 
 [dependencies]
-bytes = "0.5"
-fnv = "1.0.5"
+bytes = { version = "0.5", default-features = false }
+# fnv on master has support for nostd, but it hasn't been released to crates.io
+# yet.
+# fnv = { version = "1.0.5", default-features = false }
+fnv = { git = "https://github.com/servo/rust-fnv", default-features = false }
 itoa = { version = "0.4.1", default-features = false }
 no-std-compat = { version = "0.4.0", features = ["alloc"] }
 
