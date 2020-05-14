@@ -321,6 +321,8 @@ enum Danger {
     Yellow,
     #[cfg(feature = "std")]
     Red(RandomState),
+    #[cfg(not(feature = "std"))]
+    Red(()),
 }
 
 // Constants related to detecting DOS attacks.
@@ -1529,7 +1531,6 @@ impl<T> HeaderMap<T> {
                 // Grow the capacity
                 self.grow(new_cap);
             } else {
-                #[cfg(feature = "std")]
                 self.danger.to_red();
 
                 // Rebuild hash table
@@ -3155,7 +3156,6 @@ impl Pos {
 impl Danger {
     fn is_red(&self) -> bool {
         match *self {
-            #[cfg(feature = "std")]
             Danger::Red(_) => true,
             _ => false,
         }
@@ -3165,6 +3165,12 @@ impl Danger {
     fn to_red(&mut self) {
         debug_assert!(self.is_yellow());
         *self = Danger::Red(RandomState::new());
+    }
+
+    #[cfg(not(feature = "std"))]
+    fn to_red(&mut self) {
+        debug_assert!(self.is_yellow());
+        *self = Danger::Red(());
     }
 
     fn is_yellow(&self) -> bool {
